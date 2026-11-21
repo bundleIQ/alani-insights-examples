@@ -53,7 +53,7 @@ python3 examples/event-platform/event_platform.py teardown
 
 Setup takes about half a minute per table. The scripts add fields a few seconds apart on purpose.
 
-## What these examples are and are not
+## How these examples work
 
 The scripts make the same calls an agent makes. In the multi-agent example the workers are plain threads standing in for agents, so you can run it without any model or model key. What carries over to a real agent is the pattern: look a record up before adding it, give every new item exactly one writer, claim work before starting it, and do not overwrite what a person has checked.
 

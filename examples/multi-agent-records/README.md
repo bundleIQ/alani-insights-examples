@@ -23,5 +23,5 @@ Expected end state: 10 companies, 10 distinct domains, 0 duplicates, all researc
 Several writers working at once need rules about who writes what. These are the three the example follows:
 
 - **Every new item has exactly one writer responsible for it.** Here that is done by splitting the list. A lookup before each create catches items that appear twice.
-- **Work on existing records is shared out by claiming.** A claim is a convention between the workers, not a lock, so use it for work that is safe to do twice. The research step here is.
+- **Work on existing records is shared out by claiming.** A claim is a convention the workers share, and it suits work that is safe to repeat, like the research step here.
 - **People's corrections are protected by a flag the workers respect.** A person ticks the flag when they fix something, and the workers leave that record's details alone.
