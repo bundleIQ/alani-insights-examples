@@ -1,0 +1,8 @@
+form,title,description,organization,host_name,host_email,preferred_day,start_time,end_time,venue_name,registration_url,listing_consent
+host,Robotics Lab Open House,Tour a working robotics lab and watch three student teams demo their builds. For founders and students.,Example Coast University,Dana Whitfield,dana.whitfield@example.edu,Tue Apr 13,17:30,19:30,Engineering Hall,https://example.edu/open-house,yes
+host,Founder Breakfast: First Ten Customers,Six founders share how they found their first ten customers. Coffee provided.,Example Seed Fund,Marcus Oyelaran,marcus@examplefund.example,Wed Apr 14,08:00,09:30,Harbor Room,https://examplefund.example/breakfast,yes
+host,Open Source Mapping Workshop,Hands-on workshop: build a flood map of the county from public data.,Example Civic Lab,Dana Whitfield,Dana.Whitfield@Example.edu,Thu Apr 15,13:00,16:00,,,yes
+host,Happy Hour,Drinks and networking.,Example Realty,Pat Lindqvist,pat@examplerealty.example,Thu Apr 15,18:00,20:00,Rooftop Bar,,yes
+host,Private Investor Dinner,Invite-only dinner for a new climate fund and its partners.,Example Climate Capital,Ines Carvalho,ines@exampleclimate.example,Fri Apr 16,19:00,21:30,,,no
+idea,Sunrise Beach Cleanup With a Sensor Demo,Clean the beach then see how a water-quality sensor works.,Example Ocean Club,Sam Okafor,sam@exampleocean.example,Sat Apr 10,Morning,,,,yes
+idea,Quantum Computing for the Curious,An evening talk with no math required.,,Lee Arroyo,lee@example.org,TBA,Evening,,,,yes
