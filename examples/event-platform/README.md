@@ -12,7 +12,7 @@ This is a simplified, synthetic version of how [Palm Beach Tech Week](https://pb
 | `submit` | The form handler | Reads `submissions.csv`: five host submissions and two ideas. One host submits twice with different email capitalization and becomes one person. Run it twice: the second run creates nothing |
 | `queue` | The reviewer's list | Everything waiting, best fit first |
 | `publish` | The public calendar page | Reads the table, applies the rules, writes `calendar.json` with public fields only |
-| `review` | A reviewer pressing Confirm or Hide | Each decision is one `PATCH` of one field on one record |
+| `review` | A reviewer pressing Confirm, Show as idea or Hide | Each decision is one `PATCH` of one field on one record |
 | `teardown` | | Deletes both tables and `calendar.json` |
 
 ## Run
@@ -41,36 +41,39 @@ created: {'people': 6, 'events': 7} | already present, skipped: {'people': 1, 'e
 created: {'people': 0, 'events': 0} | already present, skipped: {'people': 7, 'events': 7}
 ```
 
-`publish` before any review. Five of seven records are public, all as ideas:
+`publish` before any review. Nothing a visitor submitted is public yet:
 
 ```
-idea       Sat Apr 10  Morning  Sunrise Beach Cleanup With a Sensor Demo
-idea       TBA         Evening  Quantum Computing for the Curious
-idea       Thu Apr 15  13:00    Open Source Mapping Workshop
-idea       Tue Apr 13  17:30    Robotics Lab Open House
-idea       Wed Apr 14  08:00    Founder Breakfast: First Ten Customers
-5 of 7 records are public. Wrote calendar.json
+0 of 7 records are public. Wrote calendar.json
 ```
 
-The two held back are "Happy Hour" (scored weak) and "Private Investor Dinner" (the host did not agree to a public listing).
-
-`publish` after `review` confirms two and hides one:
+`review` confirms one, shows two as ideas and hides one:
 
 ```
-confirmed  Sat Apr 10  Morning  Sunrise Beach Cleanup With a Sensor Demo
+confirmed  Robotics Lab Open House
+shown_idea Sunrise Beach Cleanup With a Sensor Demo
+shown_idea Open Source Mapping Workshop
+hidden     Quantum Computing for the Curious
+```
+
+`publish` after that:
+
+```
 confirmed  Tue Apr 13  17:30    Robotics Lab Open House
+idea       Sat Apr 10  Morning  Sunrise Beach Cleanup With a Sensor Demo
 idea       Thu Apr 15  13:00    Open Source Mapping Workshop
-idea       Wed Apr 14  08:00    Founder Breakfast: First Ten Customers
-4 of 7 records are public. Wrote calendar.json
+3 of 7 records are public. Wrote calendar.json
 ```
+
+The three still waiting stay private: "Founder Breakfast", "Happy Hour" and "Private Investor Dinner". The last could not be shown even if a reviewer approved it, because its host did not agree to a public listing.
 
 ## The rules
 
-The database stores records and nothing else. These rules live in the script, in `is_public_idea` and `public_view`, the same way they live in the website's code on the real site:
+The database stores records and nothing else. These rules live in the script, in `is_public` and `public_view`, the same way they live in the website's code on the real site:
 
-- A waiting record (`submitted` or `idea`) is public as an idea only if `listing_consent` is `yes` and `fit_verdict` is not `weak`.
-- A `confirmed` record is public with its venue and registration link.
-- A `hidden` record is never public.
+- A waiting record (`submitted` or `idea`) is never public, whatever its score. The score only sorts the review queue.
+- A reviewer moves a record to `shown_idea` (public as an idea: title, day, time, description, organization), `confirmed` (public with its venue and registration link as well) or `hidden` (never public).
+- A record is public only if the submitter agreed to a listing.
 - The host's name and email are on a separate people table and never leave it.
 
 ## How this differs from the real site

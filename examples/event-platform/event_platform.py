@@ -30,7 +30,8 @@ T = {"people": "example_events_people", "events": "example_events_events"}
 # Confirm or Hide on an admin page. Keyed by event slug.
 DECISIONS = {
     "robotics-lab-open-house": "confirmed",
-    "sunrise-beach-cleanup-with-a-sensor-demo": "confirmed",
+    "sunrise-beach-cleanup-with-a-sensor-demo": "shown_idea",
+    "open-source-mapping-workshop": "shown_idea",
     "quantum-computing-for-the-curious": "hidden",
 }
 
@@ -47,13 +48,14 @@ def setup():
     insights.ensure_table(
         T["events"], "Example Events", "Event",
         "One row per proposed event. status is the whole review workflow: submitted (from the host form) or idea (from the open idea form) "
-        "-> confirmed or hidden. The public calendar shows a waiting record as an idea only if listing_consent is yes and fit_verdict is not weak, "
-        "shows a confirmed record with its venue and link, and never shows a hidden one. Host name and email live on the linked person and are never public. "
+        "-> shown_idea, confirmed or hidden, set by a reviewer. A waiting record is never public. The public calendar shows a shown_idea record as an idea, "
+        "shows a confirmed record with its venue and link, and never shows a hidden one; either way listing_consent must be yes. fit_score only sorts the review queue. "
+        "Host name and email live on the linked person and are never public. "
         "Synthetic example data.",
         [
             {"name": "title", "type": "text", "required": True, "description": "Event title as the submitter typed it. Public."},
             {"name": "slug", "type": "text", "required": True, "description": "Title in lowercase with hyphens. The duplicate key for events."},
-            {"name": "status", "type": "text", "required": True, "description": "One of: submitted, idea, confirmed, hidden. Lowercase. submitted and idea are waiting for review. Only a reviewer sets confirmed or hidden."},
+            {"name": "status", "type": "text", "required": True, "description": "One of: submitted, idea, shown_idea, confirmed, hidden. Lowercase. submitted and idea are waiting for review and are not public. Only a reviewer sets shown_idea (public as an idea), confirmed (public as a confirmed event) or hidden."},
             {"name": "source", "type": "text", "required": True, "description": "Which form created the record: host or idea."},
             {"name": "description", "type": "text", "description": "What happens and who it is for. Public."},
             {"name": "organization", "type": "text", "description": "Host organization as typed. Public."},
@@ -65,7 +67,7 @@ def setup():
             {"name": "registration_url", "type": "text", "description": "Registration link. Public only once the event is confirmed."},
             {"name": "listing_consent", "type": "text", "description": "yes when the submitter agreed to a public listing. Anything else keeps the record off the public calendar."},
             {"name": "fit_score", "type": "number", "description": "1 to 10 fit against the event rubric, set when the submission arrives."},
-            {"name": "fit_verdict", "type": "text", "description": "strong, maybe or weak. A waiting record with weak stays off the public calendar until a reviewer confirms it."},
+            {"name": "fit_verdict", "type": "text", "description": "strong, maybe or weak. Labels the review queue. It does not affect what is public."},
             {"name": "fit_reason", "type": "text", "description": "One sentence explaining the score, for the reviewer."},
         ])
     print("tables ready:", ", ".join(T.values()))
@@ -173,9 +175,12 @@ def review():
         print(f"{status:<10} {found[0]['title']}")
 
 
-def is_public_idea(e):
-    waiting = e.get("status") in ("submitted", "idea")
-    return waiting and e.get("listing_consent") == "yes" and e.get("fit_verdict") != "weak"
+def is_public(e):
+    """Only what a reviewer chose to show, and only with the submitter's consent.
+
+    A waiting record (submitted or idea) is never public, whatever its score.
+    """
+    return e.get("status") in ("shown_idea", "confirmed") and e.get("listing_consent") == "yes"
 
 
 def public_view(e):
@@ -199,8 +204,7 @@ def publish():
     """What the public page does on each request: read, filter, reduce."""
     table = ids()
     events = all_events(table)
-    public = [public_view(e) for e in events
-              if (e.get("status") == "confirmed" and e.get("listing_consent") == "yes") or is_public_idea(e)]
+    public = [public_view(e) for e in events if is_public(e)]
     public.sort(key=lambda v: (v["kind"] != "confirmed", v["day"], v["title"]))
     path = os.path.join(HERE, "calendar.json")
     with open(path, "w") as handle:
