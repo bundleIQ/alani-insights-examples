@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Demo Speakers",
+    "table_name": "demo_speakers",
+    "record_name": "Speaker",
+    "description": "One row per conference speaker. Synthetic demo data.",
+    "fields": [
+      {
+        "name": "name",
+        "label": "Name",
+        "type": "text",
+        "required": true,
+        "description": "Speaker full name."
+      },
+      {
+        "name": "email",
+        "label": "Email",
+        "type": "text",
+        "required": false,
+        "description": "Lowercase email. Used to check for duplicates."
+      },
+      {
+        "name": "session",
+        "label": "Session",
+        "type": "text",
+        "required": false,
+        "description": "Session title or type."
+      },
+      {
+        "name": "status",
+        "label": "Status",
+        "type": "text",
+        "required": true,
+        "description": "One of: invited, confirmed, declined."
+      },
+      {
+        "name": "bio_received",
+        "label": "Bio received",
+        "type": "boolean",
+        "required": false,
+        "description": "Yes once the bio has arrived."
+      },
+      {
+        "name": "headshot_received",
+        "label": "Headshot received",
+        "type": "boolean",
+        "required": false,
+        "description": "Yes once the headshot has arrived."
+      },
+      {
+        "name": "travel_notes",
+        "label": "Travel notes",
+        "type": "text",
+        "required": false,
+        "description": "What travel is needed and what is booked."
+      },
+      {
+        "name": "checked_by_person",
+        "label": "Checked by person",
+        "type": "boolean",
+        "required": false,
+        "description": "Yes when a person has reviewed this row in the app. Agents must not overwrite values on a checked row without asking."
+      }
+    ]
+  },
+  {
+    "name": "Demo Sponsors",
+    "table_name": "demo_sponsors",
+    "record_name": "Sponsor",
+    "description": "One row per sponsor or sponsor prospect. Synthetic demo data.",
+    "fields": [
+      {
+        "name": "company",
+        "label": "Company",
+        "type": "text",
+        "required": true,
+        "description": "Company name."
+      },
+      {
+        "name": "domain",
+        "label": "Domain",
+        "type": "text",
+        "required": false,
+        "description": "Bare website domain, lowercase. Used to check for duplicates."
+      },
+      {
+        "name": "level",
+        "label": "Level",
+        "type": "text",
+        "required": false,
+        "description": "One of: gold, silver, bronze."
+      },
+      {
+        "name": "amount",
+        "label": "Amount",
+        "type": "number",
+        "required": false,
+        "description": "Sponsorship amount in USD, no symbols."
+      },
+      {
+        "name": "contract_status",
+        "label": "Contract status",
+        "type": "text",
+        "required": true,
+        "description": "One of: prospect, verbal_yes, signed."
+      },
+      {
+        "name": "payment_status",
+        "label": "Payment status",
+        "type": "text",
+        "required": false,
+        "description": "One of: not_invoiced, invoiced, paid."
+      },
+      {
+        "name": "checked_by_person",
+        "label": "Checked by person",
+        "type": "boolean",
+        "required": false,
+        "description": "Yes when a person has reviewed this row in the app. Agents must not overwrite values on a checked row without asking."
+      }
+    ]
+  },
+  {
+    "name": "Demo Open Items",
+    "table_name": "demo_open_items",
+    "record_name": "Open item",
+    "description": "One row per promise or to-do owed to a speaker or sponsor. Synthetic demo data. This list answers \"what is outstanding this week\".",
+    "fields": [
+      {
+        "name": "item",
+        "label": "Item",
+        "type": "text",
+        "required": true,
+        "description": "What has to be done, written so anyone on the team could do it."
+      },
+      {
+        "name": "speaker",
+        "label": "Speaker",
+        "type": "foreign-key",
+        "required": false,
+        "description": "The speaker this is for, if any."
+      },
+      {
+        "name": "sponsor",
+        "label": "Sponsor",
+        "type": "foreign-key",
+        "required": false,
+        "description": "The sponsor this is for, if any."
+      },
+      {
+        "name": "owner",
+        "label": "Owner",
+        "type": "text",
+        "required": false,
+        "description": "Team member responsible: maya, jordan, or sam. Leave empty if nobody has taken it."
+      },
+      {
+        "name": "due",
+        "label": "Due",
+        "type": "date",
+        "required": false,
+        "description": "Date it is due, YYYY-MM-DD."
+      },
+      {
+        "name": "done",
+        "label": "Done",
+        "type": "boolean",
+        "required": true,
+        "description": "Yes when finished. Always set explicitly; new items start as no."
+      },
+      {
+        "name": "source",
+        "label": "Source",
+        "type": "text",
+        "required": false,
+        "description": "Where this came from, for example the email subject and date."
+      },
+      {
+        "name": "recorded_by",
+        "label": "Recorded by",
+        "type": "text",
+        "required": false,
+        "description": "Which assistant recorded it."
+      },
+      {
+        "name": "checked_by_person",
+        "label": "Checked by person",
+        "type": "boolean",
+        "required": false,
+        "description": "Yes when a person has reviewed this row in the app. Agents must not overwrite values on a checked row without asking."
+      }
+    ]
+  }
+]
